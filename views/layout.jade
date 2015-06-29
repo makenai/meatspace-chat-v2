@@ -15,8 +15,8 @@ html
         a#info(href='javascript:;') meatspace info
         span#active loading ...
         #menu
-          button#music music
-          button#unmute unmute
+          if session
+            a(href='/logout') logout
     .wrapper
       block content
       #padding

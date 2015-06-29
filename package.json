@@ -12,12 +12,12 @@
   },
   "dependencies": {
     "async": "^0.9.0",
-    "browserify": "^6.1.0",
+    "browserify": "~10.2.4",
     "data-uri-to-blob": "0.0.4",
     "data-uri-to-buffer": "~0.0.3",
     "fingerprintjs": "~0.5.3",
     "glob": "^4.0.6",
-    "hapi": "^7.0.0",
+    "hapi": "~8.6.1",
     "jade": "^1.7.0",
     "jquery": "~2.1.1",
     "meatspace-publico": "~1.0.1",
@@ -28,18 +28,19 @@
     "uuid": "^2.0.1",
     "vid2gif": "^1.0.1",
     "waypoints": "^3.1.1",
-    "webrtc2images": "~1.4.3"
+    "webrtc2images": "~1.4.3",
+    "hapi-auth-cookie": "~3.0.1"
   },
   "devDependencies": {
-    "browserify-shim": "^3.7.0",
-    "gulp": "^3.8.7",
-    "gulp-autowatch": "0.0.1",
+    "browserify-shim": "^3.8.9",
+    "gulp": "^3.9.0",
+    "gulp-autowatch": "1.0.2",
     "gulp-cached": "^1.0.1",
     "gulp-csso": "^0.2.9",
-    "gulp-if": "^1.2.4",
+    "gulp-if": "^1.2.5",
     "gulp-match": "^0.2.1",
-    "gulp-sourcemaps": "^1.1.1",
-    "gulp-uglify": "^1.0.1",
+    "gulp-sourcemaps": "~1.5.2",
+    "gulp-uglify": "~1.2.0",
     "mkdirp": "^0.5.0",
     "nodemon": "~1.2.1",
     "rimraf": "^2.2.8",
@@ -48,9 +49,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/meatspaces/meatspace-chat-v2.git"
+    "url": "git://github.com/ednapiranha/meatspace-chat-v2.git"
   },
-  "author": "Edna Piranha <jen@ednapiranha.com> (http://ednapiranha.com)",
+  "author": "Jen",
   "license": "BSD",
   "browser": {
     "waypoints": "./node_modules/waypoints/lib/noframework.waypoints.js"

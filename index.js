@@ -11,7 +11,18 @@ nconf.argv().env().file({ file: 'local.json' });
 
 var users = 0;
 
-var server = Hapi.createServer(nconf.get('domain'), nconf.get('port'));
+var server = new Hapi.Server();
+
+var user = {
+  username: nconf.get('auth-username'),
+  password: nconf.get('auth-password')
+};
+
+server.connection({
+  host: nconf.get('domain'),
+  port: nconf.get('port')
+});
+
 server.views({
   engines: {
     jade: require('jade')
@@ -23,12 +34,92 @@ server.views({
   }
 });
 
+var login = function (request, reply) {
+  if (request.auth.isAuthenticated) {
+    return reply.redirect('/chat');
+  }
+
+  var message = '';
+  var account = null;
+
+  if (request.method === 'post') {
+    if (!request.payload.username ||
+        !request.payload.password) {
+      message = 'Missing username or password';
+    } else {
+      if (request.payload.username !== user.username &&
+          request.payload.password !== user.password) {
+        message = 'Invalid username or password';
+      }
+    }
+  }
+
+  if (request.method === 'get' || message) {
+    return reply('<html><head><title>Login page</title></head><body>'
+        + (message ? '<h3>' + message + '</h3><br/>' : '')
+        + '<form method="post" action="/login">'
+        + 'Username: <input type="text" name="username"><br>'
+        + 'Password: <input type="password" name="password"><br/>'
+        + '<input type="submit" value="Login"></form></body></html>');
+  }
+
+  request.auth.session.set(user);
+  return reply.redirect('/chat');
+};
+
+var logout = function (request, reply) {
+  request.auth.session.clear();
+  return reply.redirect('/login');
+};
+
+server.register(require('hapi-auth-cookie'), function (err) {
+  server.auth.strategy('session', 'cookie', {
+    password: nconf.get('auth-password'),
+    cookie: nconf.get('auth-cookie'),
+    redirectTo: '/login',
+    isSecure: false
+  });
+});
+
 var routes = [
   {
     method: 'GET',
     path: '/',
     config: {
-      handler: home
+      handler: login,
+      auth: 'session'
+    }
+  },
+  {
+    method: 'GET',
+    path: '/chat',
+    config: {
+      handler: home,
+      auth: 'session'
+    }
+  },
+  {
+    method: ['GET', 'POST'],
+    path: '/login',
+    config: {
+      handler: login,
+      auth: {
+        mode: 'try',
+        strategy: 'session'
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: '/logout',
+    config: {
+      handler: logout,
+      auth: 'session'
     }
   }
 ];
@@ -130,7 +221,11 @@ server.start(function () {
 });
 
 function home(request, reply) {
+  if (!request.auth.isAuthenticated) {
+    return reply.redirect('/login');
+  }
   reply.view('index', {
-    analytics: nconf.get('analytics')
+    analytics: nconf.get('analytics'),
+    session: request.auth.isAuthenticated
   });
 }
