@@ -1,7 +1,6 @@
 var $ = require('jquery');
 var Webrtc2images = require('webrtc2images');
 var Fingerprint = require('fingerprintjs');
-var music = require('./music');
 var services = require('./services');
 var vid2gif = require('vid2gif');
 var UserIdManager = require('./user-id-manager');
@@ -67,8 +66,6 @@ rtc.startVideo(function (err) {
     $('#video-preview').remove();
   }
 });
-
-$('#music').click(music.toggle);
 
 $('.close').click(function () {
   infoScreen.removeClass('on');
